@@ -1,3 +1,5 @@
+require_relative 'base_service'
+
 class MenuSelect < BaseService
   def initialize(menu_items)
     @action
