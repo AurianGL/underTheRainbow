@@ -23,7 +23,7 @@ TREE = {
             "4. I don't know, I'll just follow" => :place,
         },
         "make suggestions" => :suggestions,
-        "Stop that monstruosity" => :stop
+        "Stop that monstruosity" => :stop,
     },
     "2. NØ" => :exit
 }

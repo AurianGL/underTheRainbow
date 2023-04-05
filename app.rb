@@ -3,7 +3,7 @@ require "./services/select.rb"
 require "./display.rb"
 require "./tree.rb"
 require 'csv'
-
+require "./services/matrice.rb"
 
 Dir.glob(File.join(File.dirname(__FILE__), '**', 'init.rb')).each do |file|
   puts file
@@ -17,7 +17,6 @@ class App
       "1. Go to Berlin",
       "2. NØ"
     ]
-    @actions = [:merme, :radar]
     @choices = []
   end
 
@@ -74,15 +73,15 @@ class App
   end
 
   def merme
-    File.open("ascii.txt", "r") do |f|
+    File.open("ascii-art.txt", "r") do |f|
       # Read the file content and trim each line
       # trimmed_lines = f.readlines.map { |line| line.strip.slice(40..-40) }
-      trimmed_lines = f.readlines.map do |line| 
+      trimmed_lines = f.readlines[10..50].map do |line| 
         char_to_trim = (line.length - 100) / 2
         line.slice(/^.{#{char_to_trim}}(.{0,#{line.length-(char_to_trim * 2)}}).{#{char_to_trim}}$/, 1) 
-      end
+      end.take(40)
       # Print the trimmed lines to the console
-      puts trimmed_lines
+      Matrice.call(trimmed_lines.join("\n"))
     end
   end
 
@@ -99,7 +98,8 @@ class App
         file.puts choice
       end
     end
-    puts "Thanks for your choices they have been saved in choices.csv"
+    merme
+    puts "Thanks for your choices they have been saved in choices.txt"
     exit
   end
 
