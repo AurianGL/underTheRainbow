@@ -13,10 +13,6 @@ end
 class App
   def initialize
     @selected_item_index = 0
-    @menu_items = [
-      "1. Go to Berlin",
-      "2. NØ"
-    ]
     @choices = []
   end
 
@@ -34,13 +30,23 @@ class App
   private
 
   def navigate_decision_tree(tree)
+    # title = some ascii art writting BERLIN
+    title = <<~ART
+      ██████╗  █████╗ ██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗
+      ██╔══██╗██╔══██╗██║████╗  ██║██╔══██╗██╔═══██╗██║    ██║
+      ██████╔╝███████║██║██╔██╗ ██║██████╔╝██║   ██║██║ █╗ ██║
+      ██╔══██╗██╔══██║██║██║╚██╗██║██╔══██╗██║   ██║██║███╗██║
+      ██║  ██║██║  ██║██║██║ ╚████║██████╔╝╚██████╔╝╚███╔███╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═════╝  ╚═════╝  ╚══╝╚══╝ 
+    ART
+
     @current_node = tree
     loop do
       if @current_node.is_a?(Symbol)
         send(@current_node)
         break
       else
-        @selection = MenuSelect.call(@current_node.keys.flatten).selection
+        @selection = MenuSelect.call(@current_node.keys.flatten, title).selection
         @previous_node = @current_node
         next_node_key = @current_node.keys[@selection]
         @current_node = @current_node[next_node_key]

@@ -1,10 +1,11 @@
 require_relative 'base_service'
 
 class MenuSelect < BaseService
-  def initialize(menu_items)
+  def initialize(menu_items, title = nil)
     @action
     @selected_item_index = 0
     @menu_items = menu_items
+    @title = title
   end
 
   class Result
@@ -24,7 +25,7 @@ class MenuSelect < BaseService
   def menu
     loop do
       system 'clear' # clear the terminal screen
-      puts "\nChoose an action"
+      puts @title || "\nChoose an action"
       @menu_items.each.with_index do |item, index|
         if index == @selected_item_index
           puts "\e[31m#{item}\e[0m"

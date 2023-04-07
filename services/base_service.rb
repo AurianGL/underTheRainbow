@@ -4,8 +4,8 @@ class BaseService
     @errors = []
   end
   
-  def self.call(...)
-    new(...).call
+  def self.call(*args)
+    new(*args).call
   end
 
   def call
