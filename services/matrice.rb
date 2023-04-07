@@ -104,23 +104,47 @@ class Matrice < BaseService
       puts @ascii_art
       @ascii_art.tr('\n', '')
       # Loop indefinitely
+      count =  0
+      # previous frame is of the same size as the current frame
+      previous_frame = "j" * @ascii_art.length
       loop do
         # Generate a new frame of the animation by randomly changing characters
-          frame = ''
-          (0..num_rows-1).each do |row|
-            (0..num_cols-1).each do |col|
-              if @ascii_art[row * (num_cols + 1) + col] && @ascii_art[row * (num_cols + 1) + col] != ' '
+        count += 1
+        frame = ''
+        (0..num_rows-1).each do |row|
+          (0..num_cols-1).each do |col|
+            if row > count
+              frame += ' '
+            elsif @ascii_art[row * (num_cols + 1) + col] && @ascii_art[row * (num_cols + 1) + col] != ' '
+              # compare with previous frame
+              if row == 1
+                if previous_frame[row * (num_cols + 1) + col] == 'j'
+                  if rand(0) == 0
+                    frame += @ascii_art[row * (num_cols + 1) + col]
+                  else
+                    frame += ' '
+                  end
+                else 
+                  if rand(10) == 0 && !frame.nil?
+                    frame += characters[rand(0..5)]
+                  else
+                    frame += @ascii_art[row * (num_cols + 1) + col] 
+                  end
+                end
+              elsif previous_frame[row - 1 * (num_cols + 1) + col] != ' '
                 if rand(10) == 0 && !frame.nil?
                   frame += characters[rand(0..5)]
                 else
                   frame += @ascii_art[row * (num_cols + 1) + col] 
                 end
-              else
-                frame += ' '
               end
+            else
+              frame += ' '
             end
-            frame += "\n"
           end
+          frame += "\n"
+        end
+        previous_frame = frame.tr(" ", 'j')
 
         # Move the cursor to the top-left corner of the terminal
         print "\e[H"
@@ -130,7 +154,7 @@ class Matrice < BaseService
 
         # Sleep for a short amount of time to control the speed of the animation
         sleep 0.1
-        break if rand(10) == 0
+        break if count>num_rows * 2
       end
     end
 end
