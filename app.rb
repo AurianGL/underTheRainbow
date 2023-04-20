@@ -4,6 +4,9 @@ require "./display.rb"
 require "./tree.rb"
 require 'csv'
 require "./services/matrice.rb"
+require "./models/choices"
+require "./controllers/choices_controller"
+require "./routes"
 
 Dir.glob(File.join(File.dirname(__FILE__), '**', 'init.rb')).each do |file|
   puts file
@@ -13,7 +16,7 @@ end
 class App
   def initialize
     @selected_item_index = 0
-    @choices = []
+    @choices_controller = ChoicesController.new
   end
 
   def launch
@@ -54,15 +57,13 @@ class App
     end
   end
 
-  def store_date
-  end
-
   def display_choices
     puts @choices.flatten
   end
 
   def back(field = nil)
-    @choices << "#{field} : #{@previous_node.keys[@selection]}" if field
+    Router.route("choices/create?type=#{field}&content=#{@previous_node.keys[@selection]}") if field
+  # choices_controller.create({type: field, content: [@previous_node.keys[@selection]]}) if field
     navigate_decision_tree(TREE["1. Go to Berlin"])
   end
 
@@ -76,6 +77,16 @@ class App
 
   def place
     back("lieu")
+  end
+
+  def show_choices
+    Router.route("choices/index")
+    ok = gets.chomp
+    unless ok.nil?
+      back
+    else
+      exit
+    end
   end
 
   def merme
@@ -94,18 +105,13 @@ class App
   def suggestions
     puts "type in your suggestions"
     suggestion = gets.chomp
-    @choices << "suggestions : #{suggestion}"
-    back 
+    Router.route("choices/create?type=suggestions&content=#{suggestion}")
+    back
   end
 
   def stop    
-    File.open("choices.txt", "w") do |file|
-      @choices.each do |choice|
-        file.puts choice
-      end
-    end
     merme
-    puts "Thanks for your choices they have been saved in choices.txt"
+    puts "Thanks for your choices "
     exit
   end
 
