@@ -7,6 +7,8 @@ require "./services/matrice.rb"
 require "./models/choices"
 require "./controllers/choices_controller"
 require "./routes"
+require './db'
+
 
 Dir.glob(File.join(File.dirname(__FILE__), '**', 'init.rb')).each do |file|
   puts file
@@ -64,7 +66,7 @@ class App
   end
 
   def back(field = nil)
-    Router.route("choices/create?type=#{field}&content=#{@previous_node.keys[@selection]}") if field
+    Router.new("choices/create?type=#{field}&content=#{@previous_node.keys[@selection]}").route if field
   # choices_controller.create({type: field, content: [@previous_node.keys[@selection]]}) if field
     navigate_decision_tree(TREE["1. Go to Berlin"])
   end
@@ -82,7 +84,7 @@ class App
   end
 
   def show_choices
-    Router.route("choices/index")
+    Router.new("choices/index").route
     ok = gets.chomp
     unless ok.nil?
       back
@@ -107,7 +109,7 @@ class App
   def suggestions
     puts "type in your suggestions"
     suggestion = gets.chomp
-    Router.route("choices/create?type=suggestions&content=#{suggestion}")
+    Router.new("choices/create?type=suggestions&content=#{suggestion}").route
     back
   end
 

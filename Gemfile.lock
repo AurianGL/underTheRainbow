@@ -3,6 +3,8 @@ GEM
   specs:
     chunky_png (1.4.0)
     colorize (0.8.1)
+    sqlite3 (1.6.2-arm64-darwin)
+    sqlite3 (1.6.2-x86_64-linux)
 
 PLATFORMS
   arm64-darwin-22
@@ -11,6 +13,7 @@ PLATFORMS
 DEPENDENCIES
   chunky_png
   colorize
+  sqlite3
 
 BUNDLED WITH
    2.4.6
