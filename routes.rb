@@ -1,17 +1,15 @@
 require_relative "./controllers/choices_controller"
-require 'uri'
-
 class Router
   def self.route(url)
     # Split the URL into its parts
-    url = URI.encode(url)
+    # url = CGI.escape(url)
     url_parts = url.split("?")[0].split("/")
     controller_name = url_parts[0].capitalize + "Controller"
     action_name = url_parts[1]
 
     # Extract the query parameters and parse them into a hash
     query_string = url.split("?")[1]
-    query_params = query_string.nil? ? {} : URI.decode_www_form(query_string).to_h
+    query_params = parse_query_params(query_string)
 
     # Dynamically instantiate the controller based on the URL
     controller = Object.const_get(controller_name).new
@@ -26,5 +24,12 @@ class Router
     else
       controller.send(action_name, *url_parts[3..-1], query_params)
     end
+  end
+
+  private
+  def self.parse_query_params(query_string)
+    return {} unless query_string
+    unparsed_pair = query_string.split("&")
+    unparsed_pair.map { _1.split("=")}.to_h
   end
 end
